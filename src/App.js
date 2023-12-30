@@ -8,7 +8,6 @@ import {
   Route,
   Navigate,
   Outlet,
-  useNavigate,
 } from "react-router-dom";
 
 // components
@@ -30,7 +29,7 @@ function App() {
   return (
     <DataProvider>
       <BrowserRouter>
-        <div style={{ marginTop: 64 }}>
+        <div style={{ margin: 50 }}>
           <Routes>
             <Route path="/login" element={<Login />} />
             <Route path="/" element={<PrivateRoute />}>
