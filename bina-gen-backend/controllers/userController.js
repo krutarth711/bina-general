@@ -14,7 +14,6 @@ const createUser = async (req, res) => {
 };
 
 const getUser = async (req, res) => {
-    console.log('IN HERE');
     try {
         const user = await User.findAll({username: req.params.username});
         if(!user){

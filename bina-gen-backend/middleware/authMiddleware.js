@@ -1,20 +1,30 @@
 const jwt = require('jsonwebtoken');
+require('dotenv').config();
 
-const authMiddleware = (req, res, next) => {
-  const token = req.header('x-auth-token');
+const isAuthorized = () => async (req, res, next) => {
+    let token = null;
+    if(req.headers.authorization){
+        token = req.headers.authorization.replace("Bearer", "").trim();
+    }
 
-  if (!token) {
-    return res.status(401).json({ message: 'Authorization denied' });
-  }
+    if (!token) {
+        return res.status(403).send({
+            message: "No token provided!"
+        });
+    }
 
-  try {
-    const decoded = jwt.verify(token, 'your-secret-key');
-    req.user = decoded.user;
-    next();
-  } catch (error) {
-    console.error(error);
-    res.status(401).json({ message: 'Token is not valid' });
-  }
+    jwt.verify(token, 'your-secret-key', (err, decoded) => {
+        if (err) {
+            return res.status(401).send({
+                message: "Unauthorized!"
+            });
+        }
+        req.user = decoded.user;
+        next();
+    });
 };
 
-module.exports = authMiddleware;
+
+module.exports = {
+    isAuthorized
+};

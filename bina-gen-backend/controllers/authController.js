@@ -9,11 +9,12 @@ const login = async (req, res) => {
   try {
     const user = await User.findOne({ where: { username } });
 
+    console.log('USER: ', user);
+
     var passwordIsValid = bcrypt.compareSync(
         password,
         user.password
     );
-    console.log('############################## 1');
 
     if (!user || !passwordIsValid) {
       return res.status(401).json({ message: 'Invalid username or password' });
@@ -21,7 +22,7 @@ const login = async (req, res) => {
 
     const token = generateToken(user);
 
-    res.json({ token });
+    res.json({ token, role: user.role, username: user.username });
   } catch (error) {
     console.error(error);
     res.status(500).json({ message: 'Internal server error' });
