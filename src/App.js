@@ -1,4 +1,4 @@
-import { useState, useEffect, useContext } from "react";
+import { useContext } from "react";
 
 import DataProvider, { DataContext } from "./contexts/authContext";
 
@@ -29,7 +29,7 @@ function App() {
   return (
     <DataProvider>
       <BrowserRouter>
-        <div style={{ margin: 50 }}>
+        <div style={{ marginTop: 64 }}>
           <Routes>
             <Route path="/login" element={<Login />} />
             <Route path="/" element={<PrivateRoute />}>

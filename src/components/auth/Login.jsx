@@ -37,8 +37,9 @@ const Login = () => {
 
 
     const loginUser = async () => {
-        console.log('LOGIN INFO: ', login);
+
         const response = await API.userLogin(login);
+        console.log();
         if (response.isSuccess) {
             console.log('response.data::', response.data.token);
             setError('');

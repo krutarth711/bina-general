@@ -10,7 +10,7 @@ const Home = () => {
 
   return (
     <div>
-      <h2>Welcome to the Dashboard {account.username}.! You are a {account.role}</h2>
+      <h4>Welcome to the Dashboard {account.username}.! You are a {account.role}</h4>
       {account.role === 'Super Admin' ?
         <GetUsers /> : ''
       }
