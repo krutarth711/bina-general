@@ -4,22 +4,25 @@ import { API } from '../../helpers/api';
 
 import { CenterCell, HeaderCenterCell } from './pendingList.style';
 
-import { Box, Typography, Table, TableHead, TableRow, TableBody, Button, Divider, CssBaseline, Dialog, DialogTitle, DialogContent } from '@mui/material';
+import { Box, Typography, Backdrop, CircularProgress, Table, TableHead, TableRow, TableBody, Button, Divider, CssBaseline, Dialog, DialogTitle, DialogContent } from '@mui/material';
 import axios from 'axios';
 
 const GetPendingList = () => {
     const [file, setFile] = useState(null);
     const [fileData, setFileData] = useState({ fileName: '', fileType: '' });
     const [pendingList, setPendingList] = useState([]);
+    const [openLoader, setOpenLoader] = useState(false);
 
     useEffect(() => {
         getPendingLists();
     }, [])
 
     const getPendingLists = async () => {
+        setOpenLoader(true);
         const response = await API.getPendingLists();
         console.log('response: ', response.data);
         setPendingList(response.data.plists || [])
+        setOpenLoader(false);
     }
 
     const handleFileChange = (event) => {
@@ -28,6 +31,7 @@ const GetPendingList = () => {
     };
 
     const handleUpload = async () => {
+        setOpenLoader(true);
         if (!file) {
             console.error('No file selected.');
             return;
@@ -46,9 +50,11 @@ const GetPendingList = () => {
 
                 const mysqlUpdateResponse = await API.updateMySQL({ uploadTime: response.data.uploadTime, fileName: fileData.fileName });
                 console.log('mysqlUpdateResponse: ', mysqlUpdateResponse);
+                setOpenLoader(false);
                 getPendingLists();
             }
         } catch (error) {
+            setOpenLoader(false);
             console.error('Error getting signed URL:', error);
             alert('Error uploading the file');
             // Handle error or display an error message
@@ -129,6 +135,12 @@ const GetPendingList = () => {
                         }
                     </TableBody>
                 </Table>
+                <Backdrop
+                    sx={{ color: '#fff', zIndex: (theme) => theme.zIndex.drawer + 1 }}
+                    open={openLoader}
+                >
+                    <CircularProgress color="inherit" />
+                </Backdrop>
             </Box>
         </>
         // <div>

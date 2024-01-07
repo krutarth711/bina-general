@@ -27,6 +27,7 @@ export const SERVICE_URLS = {
   userLogin: { url: "/auth", method: "POST" },
   getUsers: { url: "/user", method: "GET" },
   createUser: { url: "/user", method: "POST" },
+  deleteUser: { url: "/user", method: "DELETE" },
   getS3URL: { url: "/PList", method: "POST" },
   updateMySQL: { url: "/PList/internal", method: "POST" },
   getPendingLists: { url: "/PList", method: "GET" },

@@ -1,8 +1,11 @@
 import React, { useState } from 'react';
-import { TextField, Button, Dialog, DialogTitle, DialogContent, Typography, FormControl, InputLabel, Select, MenuItem, IconButton, InputAdornment } from '@mui/material';
+import { TextField, Button, Backdrop, CircularProgress, Dialog, DialogTitle, DialogContent, Typography, FormControl, InputLabel, Select, MenuItem, IconButton, InputAdornment } from '@mui/material';
 import { Visibility, VisibilityOff } from '@mui/icons-material';
+import { API } from '../../helpers/api';
 
 const CreateUser = ({ isOpen, onClose }) => {
+  const [formInvalid, setFormInvalid] = useState(false);
+
   const [userData, setUserData] = useState({
     username: '',
     email: '',
@@ -17,16 +20,33 @@ const CreateUser = ({ isOpen, onClose }) => {
   };
 
   const handleInputChange = (e) => {
+    setFormInvalid(false);
     const { name, value } = e.target;
     setUserData((prevData) => ({ ...prevData, [name]: value }));
   };
 
-  const handleSubmit = () => {
+  const handleSubmit = async () => {
     // Add logic to handle form submission (e.g., API call, validation)
     // For simplicity, just log the user data in this example
-    console.log('User Data:', userData);
-
+    if (!userData.username || !userData.email || !userData.password) {
+      // Display an error message or handle the validation as needed
+      console.error('Please fill in all required fields');
+      setFormInvalid(true);
+      return;
+    }
+    try {
+      await API.createUser(userData);
+    } catch (error) {
+      alert('some error occurred');
+      console.log(error);
+    }
     // Close the modal after submission
+    setUserData({
+      username: '',
+      email: '',
+      password: '',
+      role: 'Staff'
+    })
     onClose();
   };
 
@@ -42,6 +62,7 @@ const CreateUser = ({ isOpen, onClose }) => {
             onChange={handleInputChange}
             fullWidth
             margin="normal"
+            required
           />
           <TextField
             label="Email"
@@ -50,6 +71,7 @@ const CreateUser = ({ isOpen, onClose }) => {
             onChange={handleInputChange}
             fullWidth
             margin="normal"
+            required
           />
           <TextField
             label="Password"
@@ -59,6 +81,7 @@ const CreateUser = ({ isOpen, onClose }) => {
             onChange={handleInputChange}
             fullWidth
             margin="normal"
+            required
             InputProps={{
               endAdornment: (
                 <InputAdornment position="end">
@@ -86,6 +109,8 @@ const CreateUser = ({ isOpen, onClose }) => {
           <Button variant="contained" color="primary" onClick={handleSubmit}>
             Create
           </Button>
+          {formInvalid ? <p style={{ color: 'red' }}>Please fill all the fields!</p> : <></>}
+
         </form>
       </DialogContent>
     </Dialog>

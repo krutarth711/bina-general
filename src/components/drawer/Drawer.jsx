@@ -45,7 +45,7 @@ const DrawerComp = ({ left, closeDrawer }) => {
         >
             <List style={{ marginTop: '50px' }}>
                 {componentLinks.map((text, index) => (
-                    <ListItem key={text.id} disablePadding>
+                    <ListItem key={text.id} disablePadding onClick={() => closeDrawer()}>
                         <NavLink to={text.link} style={{ width: '100%', textDecoration: 'none', color: 'black' }}>
                             <ListItemButton style={{ paddingLeft: '15px' }}>
                                 <ListItemText primary={text.name} />
