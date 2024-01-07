@@ -6,18 +6,11 @@ export const Component = styled(Box)`
     box-shadow: 5px 2px 5px 5px rgb(0 0 0/ 0.6);
 `
 
-export const ImageHeader = styled('h3')({
-    width: 100,
-    margin: 'auto',
-    display: 'flex',
-    padding: '50px'
-})
-
 export const Image = styled('img')({
-    width: 100,
+    width: 200,
     margin: 'auto',
     display: 'flex',
-    padding: '50px'
+    padding: '20px'
 });
 
 export const Wrapper = styled(Box)`

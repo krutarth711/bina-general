@@ -15,12 +15,12 @@ module.exports = (sequelize, Sequelize) => {
     },
     password: {
       type: Sequelize.STRING,
-      allowNull: false
+      allowNull: false,
     },
     role: {
       type: Sequelize.ENUM("Super Admin", "Admin", "Employee"),
       defaultValue: "Employee",
-    }
+    },
   });
 
   return User;

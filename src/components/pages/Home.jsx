@@ -2,7 +2,9 @@ import React from 'react';
 import { useContext } from 'react';
 
 import { DataContext } from '../../contexts/authContext';
-import GetUsers from '../user/GetUsers';
+import { Box, CssBaseline, List, ListItem, ListItemText } from '@mui/material';
+import { NavLink } from 'react-router-dom';
+
 
 const Home = () => {
 
@@ -10,11 +12,20 @@ const Home = () => {
 
   return (
     <div>
-      <h4>Welcome to the Dashboard {account.username}.! You are a {account.role}</h4>
-      {account.role === 'Super Admin' ?
-        <GetUsers /> : ''
-      }
-      {/* Display content for the home page */}
+      <Box sx={{ display: 'flex' }}>
+        <List>
+          <ListItem>
+            <NavLink to="/users" >
+              <ListItemText primary="Users" />
+            </NavLink>
+          </ListItem>
+          <ListItem>
+            <NavLink to="/pending-list" >
+              <ListItemText primary="pending-list" />
+            </NavLink>
+          </ListItem>
+        </List>
+      </Box>
     </div>
   );
 };

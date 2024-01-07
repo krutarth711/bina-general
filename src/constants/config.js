@@ -24,6 +24,11 @@ export const API_NOTIFICATION_MESSAGE = {
 };
 
 export const SERVICE_URLS = {
-  userLogin: { url: "/auth/login", method: "POST" },
-  // createPost: { url: '/create', method: 'POST' },
+  userLogin: { url: "/auth", method: "POST" },
+  getUsers: { url: "/user", method: "GET" },
+  createUser: { url: "/user", method: "POST" },
+  getS3URL: { url: "/PList", method: "POST" },
+  updateMySQL: { url: "/PList/internal", method: "POST" },
+  getPendingLists: { url: "/PList", method: "GET" },
+  // createPost: { url: '/user', method: 'POST' },
 };
