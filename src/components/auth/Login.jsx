@@ -1,6 +1,6 @@
 import { useState, useContext, useEffect } from 'react';
 
-import { TextField } from '@mui/material';
+import { TextField, Backdrop, CircularProgress } from '@mui/material';
 
 import { Component, Error, Image, LoginButton, Wrapper } from './Login.style';
 import imageUrl from '../../assets/Bina-general-trading-logo.png';
@@ -21,6 +21,7 @@ const Login = () => {
 
     const [login, setLogin] = useState(loginInitialValues);
     const [error, setError] = useState('');
+    const [openLoader, setOpenLoader] = useState(false);
 
     const { account, setAccount } = useContext(DataContext);
     const navigate = useNavigate();
@@ -37,7 +38,7 @@ const Login = () => {
 
 
     const loginUser = async () => {
-
+        setOpenLoader(true);
         const response = await API.userLogin(login);
         if (response.isSuccess) {
             console.log('response::', response);
@@ -51,7 +52,7 @@ const Login = () => {
             setAccount({ username: response.data.username, role: response.data.role })
 
             console.log('set the authentication to true::: ');
-
+            setOpenLoader(false);
             navigate('/');
         } else {
             setError('Something went wrong! Please try again.');
@@ -67,6 +68,12 @@ const Login = () => {
                 {error && <Error>{error}</Error>}
                 <LoginButton variant="contained" onClick={() => loginUser()}>Login</LoginButton>
             </Wrapper>
+            <Backdrop
+                sx={{ color: '#fff', zIndex: (theme) => theme.zIndex.drawer + 1 }}
+                open={openLoader}
+            >
+                <CircularProgress color="inherit" />
+            </Backdrop>
         </Component>
     )
 }
