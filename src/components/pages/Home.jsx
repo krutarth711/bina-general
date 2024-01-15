@@ -21,15 +21,8 @@ const Home = () => {
 
   const tileLinks = [
     { link: "/users", title: "Users", content: "Manage users" },
-    { link: "/pending-list", title: "Pending Lists", content: "Upload BL lists" }
-  ];
-
-  const data = [
-    { id: 1, title: 'Item 1', content: 'Content for Item 1' },
-    { id: 2, title: 'Item 2', content: 'Content for Item 2' },
-    { id: 3, title: 'Item 3', content: 'Content for Item 3' },
-    { id: 4, title: 'Item 4', content: 'Content for Item 4' },
-    // Add more items as needed
+    { link: "/pending-list", title: "Pending Lists", content: "Upload BL Lists" },
+    { link: "/active-list", title: "Active Lists", content: "Manage Active Lists" }
   ];
 
   const { account } = useContext(DataContext);
@@ -55,20 +48,6 @@ const Home = () => {
             </Grid>
           ))}
         </Grid>
-
-
-        {/* <List>
-          <ListItem>
-            <NavLink to="/users" >
-              <ListItemText primary="Users" />
-            </NavLink>
-          </ListItem>
-          <ListItem>
-            <NavLink to="/pending-list" >
-              <ListItemText primary="pending-list" />
-            </NavLink>
-          </ListItem>
-        </List> */}
       </Box>
     </div>
   );

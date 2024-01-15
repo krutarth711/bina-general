@@ -18,12 +18,16 @@ const componentLinks = [
         id: 3,
         link: "/pending-list",
         name: "Pending List"
+    },
+    {
+        id: 4,
+        link: "/active-list",
+        name: "Active List"
     }
 ];
 
 const drawerWidth = 240
 const DrawerComp = ({ left, closeDrawer }) => {
-    console.log('################################ FIRST:', left, 'function', closeDrawer);
     return (
         <Drawer
             sx={{

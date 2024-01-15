@@ -3,6 +3,7 @@ import React, { useEffect, useState } from 'react';
 import { API } from '../../helpers/api';
 
 import { CenterCell, HeaderCenterCell } from './pendingList.style';
+import { useNavigate } from 'react-router-dom';
 
 import { Box, Typography, Backdrop, CircularProgress, Table, TableHead, TableRow, TableBody, Button, Divider, CssBaseline, Dialog, DialogTitle, DialogContent } from '@mui/material';
 import axios from 'axios';
@@ -13,21 +14,35 @@ const GetPendingList = () => {
     const [pendingList, setPendingList] = useState([]);
     const [openLoader, setOpenLoader] = useState(false);
 
+    const navigate = useNavigate();
+
     useEffect(() => {
         getPendingLists();
     }, [])
 
     const getPendingLists = async () => {
-        setOpenLoader(true);
-        const response = await API.getPendingLists();
-        console.log('response: ', response.data);
-        setPendingList(response.data.plists || [])
-        setOpenLoader(false);
+        try {
+            setOpenLoader(true);
+            // const response = await API.getPendingLists();
+            const response = await API.getPendingLists();
+            if (!response.data) {
+                navigate('/login');
+                return;
+            }
+            setPendingList(response.data?.plists || []);
+            setOpenLoader(false);
+        } catch (error) {
+            setPendingList([])
+            setOpenLoader(false);
+            console.log('some error happened')
+        }
     }
 
     const handleFileChange = (event) => {
-        setFile(event.target.files[0]);
-        setFileData({ fileName: event.target.files[0].name, fileType: event.target.files[0].type })
+        if (event.target.files[0]) {
+            setFile(event.target.files[0]);
+            setFileData({ fileName: event.target.files[0].name, fileType: event.target.files[0].type });
+        }
     };
 
     const handleUpload = async () => {
@@ -50,6 +65,8 @@ const GetPendingList = () => {
 
                 const mysqlUpdateResponse = await API.updateMySQL({ uploadTime: response.data.uploadTime, fileName: fileData.fileName });
                 console.log('mysqlUpdateResponse: ', mysqlUpdateResponse);
+                setFile(null);
+                setFileData({ fileName: '', fileType: '' });
                 setOpenLoader(false);
                 getPendingLists();
             }
@@ -61,39 +78,19 @@ const GetPendingList = () => {
         }
     };
 
+    const createActive = async (PLInfo) => {
+        PLInfo.BL_id = PLInfo.plist_id;
+        console.log('creating active: ', PLInfo);
+        navigate('/active-list', { state: PLInfo })
+    }
+
     const downloadFile = async (s3FileUrl) => {
         window.open(s3FileUrl);
-
-        // try {
-        //     const response = await axios.get(s3FileUrl, {
-        //         responseType: 'blob',
-        //         headers: {
-        //             'Content-Type': 'application/pdf',
-        //         },
-        //     });
-
-        //     // Create a blob from the response and initiate a download
-        //     const url = window.URL.createObjectURL(new Blob([response.data]));
-        //     const a = document.createElement('a');
-
-        //     // Set the download attribute and create a clickable link
-        //     a.href = url;
-        //     a.download = 'downloaded-file'; // You can set the desired file name here
-        //     document.body.appendChild(a);
-
-        //     // Trigger the click event to start the download
-        //     a.click();
-
-        //     // Remove the link from the DOM
-        //     document.body.removeChild(a);
-        // } catch (error) {
-        //     console.error('Error:', error.message);
-        // }
     };
 
     return (
         <>
-            <Box width='100%' marginLeft='30px'>
+            <Box maxWidth='100%' marginLeft='30px'>
                 <Box display="flex" alignItems="center" justifyContent="space-between" margin={3}>
                     {/* Left Section */}
                     <Box marginLeft={8}>
@@ -102,33 +99,35 @@ const GetPendingList = () => {
 
                     {/* Right Section */}
                     <Box marginRight={15}>
-                        <div>
-                            <input type="file" onChange={handleFileChange} />
-                            <Button onClick={handleUpload}>
-                                Upload</Button>
-                        </div>
-                        {/* <Button variant="contained" color="primary" onClick={openCreateUserModal}>
-                            Create User
-                        </Button> */}
+                        <input type="file" onChange={handleFileChange} />
+                        <Button onClick={handleUpload} variant='contained' color='primary' disabled={file === null}>
+                            Upload</Button>
                     </Box>
                 </Box>
                 <Divider />
                 <Table >
                     <TableHead>
                         <TableRow>
+                            <HeaderCenterCell>Sr. No</HeaderCenterCell>
                             <HeaderCenterCell>Filename</HeaderCenterCell>
+                            <HeaderCenterCell>Created Date</HeaderCenterCell>
                             {/* <HeaderCenterCell>Role</HeaderCenterCell>
                             <HeaderCenterCell>Email</HeaderCenterCell> */}
+                            <HeaderCenterCell>Status</HeaderCenterCell>
                             <HeaderCenterCell>Action</HeaderCenterCell>
                         </TableRow>
                     </TableHead>
                     <TableBody>
                         {
-                            pendingList.map(pl => (
+                            pendingList.map((pl, index) => (
                                 <TableRow>
+                                    <CenterCell>{index + 1}</CenterCell>
                                     <CenterCell>{pl.listname}</CenterCell>
+                                    <CenterCell>{pl.created_date}</CenterCell>
+                                    <CenterCell>{pl.list_status}</CenterCell>
                                     <CenterCell>
-                                        <Button variant='contained' color='success' onClick={() => downloadFile(pl.s3_url)}> Download </Button>
+                                        <Button variant='contained' color='success' onClick={() => downloadFile(pl.s3_url)}> View </Button>
+                                        <Button variant='contained' style={{ marginLeft: "10px" }} color='primary' onClick={() => createActive(pl)}> Create </Button>
                                     </CenterCell>
                                 </TableRow>
                             ))
@@ -143,11 +142,6 @@ const GetPendingList = () => {
                 </Backdrop>
             </Box>
         </>
-        // <div>
-        //     <input type="file" onChange={handleFileChange} />
-        //     <Button onClick={handleUpload}>
-        //         Upload</Button>
-        // </div>
     );
 }
 

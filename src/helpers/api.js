@@ -26,7 +26,7 @@ axiosInstance.interceptors.request.use(
 
 axiosInstance.interceptors.response.use(
   function (response) {
-    return processResponse(response);
+    return processResponse(response.data);
   },
   function (error) {
     return Promise.reject(processError(error));
@@ -34,13 +34,16 @@ axiosInstance.interceptors.response.use(
 );
 
 const processResponse = (response) => {
-  if (response?.status === 200) {
-    return { isSuccess: true, data: response?.data };
+  if (response?.statusCode === 200) {
+    return { isSuccess: true, data: response };
   } else {
+    if (response?.statusCode === 401) {
+      sessionStorage.clear();
+    }
     return {
       isFailure: true,
       status: response?.status,
-      msg: response?.msg,
+      error: response?.error,
       code: response?.code,
     };
   }

@@ -1,11 +1,11 @@
 import { styled, TableCell } from '@mui/material';
 
 export const CenterCell = styled(TableCell)({
-    'text-align': 'center'
+    textAlign: 'center',
 });
 
 export const HeaderCenterCell = styled(TableCell)({
-    'text-align': 'center',
+    textAlign: 'center',
     fontWeight: 'bold',
     fontSize: '16px'
 });

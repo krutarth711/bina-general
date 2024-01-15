@@ -58,7 +58,7 @@ const GetUsers = () => {
 
                     {/* Right Section */}
                     <Box marginRight={15}>
-                        <Button variant="contained" color="primary" onClick={openCreateUserModal}>
+                        <Button variant="contained" color="primary" onClick={openCreateUserModal} disabled={account.role !== "Super Admin"}>
                             Create User
                         </Button>
                     </Box>

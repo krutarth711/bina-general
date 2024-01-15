@@ -31,5 +31,5 @@ export const SERVICE_URLS = {
   getS3URL: { url: "/PList", method: "POST" },
   updateMySQL: { url: "/PList/internal", method: "POST" },
   getPendingLists: { url: "/PList", method: "GET" },
-  // createPost: { url: '/user', method: 'POST' },
+  getActivePendingLists: { url: "/PList", method: "GET", params: true },
 };
