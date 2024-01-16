@@ -5,17 +5,6 @@ import { DataContext } from '../../contexts/authContext';
 import { Box, CssBaseline, Grid, List, ListItem, ListItemText, Card, CardContent, Typography } from '@mui/material';
 import { NavLink } from 'react-router-dom';
 
-// const useStyles = makeStyles((theme) => ({
-//   root: {
-//     flexGrow: 1,
-//     padding: theme.spacing(2),
-//   },
-//   card: {
-//     maxWidth: 300,
-//     margin: theme.spacing(2),
-//   },
-// }));
-
 const Home = () => {
   // const classes = useStyles();
 

@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { TextField, Button, Tooltip, Backdrop, CircularProgress, Dialog, DialogTitle, DialogContent, Typography, FormControl, InputLabel, Select, MenuItem, IconButton, InputAdornment } from '@mui/material';
+import { Close as CloseIcon } from '@mui/icons-material'; // Import the CloseIcon
 import { API } from '../../helpers/api';
 
 const CreateActiveList = ({ isOpen, onClose, initData }) => {
@@ -8,21 +9,20 @@ const CreateActiveList = ({ isOpen, onClose, initData }) => {
     const [activeData, setActiveData] = useState({
         alist_id: null,
         BL_id: null,
-        filename: '',
+        listname: '',
         list_status: 'Not-Started',
         quantity: 0,
         unit_weight: 0,
         total_weight: 0,
-        unit: 'KG',
+        unit: 'KGS',
         total_price: 0,
         unit_price: 0,
-        item_name: '',
-        submit_url: ''
+        item_name: ''
     });
 
     useEffect(() => {
         setActiveData((prevData) => ({ ...prevData, ...initData }));
-    }, []);
+    }, [initData]);
 
 
     const handleInputChange = (e) => {
@@ -45,31 +45,48 @@ const CreateActiveList = ({ isOpen, onClose, initData }) => {
 
     const handleSubmit = async () => {
         console.log('ACTIVE DATA: ', activeData);
-        console.log('INIT DATA at submit: ', initData);
         try {
             if (activeData.item_name === '') {
                 setFormInvalid(true);
                 return;
+            } else {
+                if (activeData.alist_id === null) {
+                    //create active list
+                    console.log('should send the req:');
+                    await API.createActiveList(activeData);
+                } else {
+                    //update active list
+                    console.log('IT SHOULD CALL UPDATE');
+                    await API.updateActiveList(activeData);
+                }
             }
-            //create active list api call
-            // await API.createUser(activeData);
         } catch (error) {
             alert('some error occurred');
             console.log(error);
         }
         // Close the modal after submission
-        onClose();
+        onClose(activeData.BL_id);
     };
 
     return (
         <Dialog open={isOpen}>
-            <DialogTitle>Create active list</DialogTitle>
+            <DialogTitle>Create active list
+                <IconButton
+                    edge="end"
+                    color="inherit"
+                    onClick={() => onClose()}
+                    aria-label="close"
+                    style={{ position: 'absolute', right: 8, top: 8 }}
+                >
+                    <CloseIcon />
+                </IconButton>
+            </DialogTitle>
             <DialogContent>
                 <form>
                     <TextField
-                        label="Filename"
-                        name="filename"
-                        value={activeData.filename}
+                        label="listname"
+                        name="listname"
+                        value={activeData.listname}
                         onChange={handleInputChange}
                         fullWidth
                         margin="normal"
@@ -149,7 +166,7 @@ const CreateActiveList = ({ isOpen, onClose, initData }) => {
                             value={activeData.unit}
                             onChange={handleInputChange}
                         >
-                            <MenuItem value="KG">KG</MenuItem>
+                            <MenuItem value="KGS">KGS</MenuItem>
                             <MenuItem value="GRMS">GRMS</MenuItem>
                             <MenuItem value="MLS">MLS</MenuItem>
                         </Select>
