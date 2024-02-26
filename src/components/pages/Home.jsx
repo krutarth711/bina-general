@@ -1,27 +1,33 @@
-import React from 'react';
-import { useContext } from 'react';
+import React, { useEffect } from 'react';
+import { useContext, useState } from 'react';
 
 import { DataContext } from '../../contexts/authContext';
-import { Box, CssBaseline, Grid, List, ListItem, ListItemText, Card, CardContent, Typography } from '@mui/material';
+import { Box, Grid, Card, CardContent, Typography } from '@mui/material';
 import { NavLink } from 'react-router-dom';
 
 const Home = () => {
-  // const classes = useStyles();
+  const { account } = useContext(DataContext);
 
-  const tileLinks = [
-    { link: "/users", title: "Users", content: "Manage users" },
+  const [tileLinks, setTileLinks] = useState([
     { link: "/pending-list", title: "Pending Lists", content: "Upload BL Lists" },
     { link: "/active-list", title: "Active Lists", content: "Manage Active Lists" }
-  ];
+  ]);
 
-  const { account } = useContext(DataContext);
+
+  useEffect(() => {
+    console.log('account role is::', account.role);
+    if (account.role === 'Admin' || account.role === 'Super Admin') {
+      console.log('pushing the users');
+      setTileLinks([...tileLinks, { link: "/users", title: "Users", content: "Manage users" }]);
+    }
+  }, []);
 
   return (
     <div>
       <Box sx={{ display: 'flex', margin: '50px' }}>
         <Grid container spacing={3}>
-          {tileLinks.map((item) => (
-            <Grid item xs={12} sm={6} md={3} key={item.id}>
+          {tileLinks.map((item, index) => (
+            <Grid item xs={12} sm={6} md={3} key={index}>
               <NavLink to={item.link} style={{ textDecoration: 'none' }} >
                 <Card >
                   <CardContent>

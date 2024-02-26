@@ -15,7 +15,8 @@ import Login from "./components/auth/Login";
 import Home from "./components/pages/Home";
 import GetUsers from "./components/user/GetUsers";
 import GetPendingList from "./components/pendingList/GetPendingList";
-import GetActiveList from './components/activeList/getActiveList';
+import GetActiveLists from './components/activeList/getActiveLists';
+import GetActiveSingleList from './components/activeList/getActiveSingleList';
 
 const PrivateRoute = () => {
     const { account } = useContext(DataContext);
@@ -50,7 +51,14 @@ const AppRoutes = () => {
                     <Route
                         exact
                         path="/active-list"
-                        element={<GetActiveList />}
+                        element={<GetActiveLists />}
+                    />
+                </Route>
+                <Route exact path="/active-list/:BL_id" element={<PrivateRoute />}>
+                    <Route
+                        exact
+                        path="/active-list/:BL_id"
+                        element={<GetActiveSingleList />}
                     />
                 </Route>
             </Routes>

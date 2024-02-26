@@ -7,7 +7,7 @@ const API_URL = "https://wewvwy3moh.execute-api.us-east-1.amazonaws.com/dev";
 
 const axiosInstance = axios.create({
   baseURL: API_URL,
-  timeout: 10000,
+  timeout: 30000,
 });
 
 axiosInstance.interceptors.request.use(

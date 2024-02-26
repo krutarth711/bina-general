@@ -1,6 +1,6 @@
-import { AppBar, IconButton, Toolbar, Box, Button, ListItemIcon, Typography, Menu, MenuItem, Tooltip, Avatar } from '@mui/material';
-import { Menu as MenuIcon, AccountCircle, Logout as LogoutIcon } from '@mui/icons-material';
-import React, { useContext, useEffect, useState } from 'react';
+import { AppBar, IconButton, Toolbar, Box, ListItemIcon, Typography, Menu, MenuItem, Tooltip, Avatar } from '@mui/material';
+import { Menu as MenuIcon, Logout as LogoutIcon } from '@mui/icons-material';
+import React, { useContext, useState } from 'react';
 import DrawerComp from '../drawer/Drawer';
 import { DataContext } from '../../contexts/authContext';
 import { useNavigate } from 'react-router-dom';

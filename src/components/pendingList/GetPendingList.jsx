@@ -5,7 +5,7 @@ import { API } from '../../helpers/api';
 import { CenterCell, HeaderCenterCell } from './pendingList.style';
 import { useNavigate } from 'react-router-dom';
 
-import { Box, Typography, Backdrop, CircularProgress, Table, TableHead, TableRow, TableBody, Button, Divider, CssBaseline, Dialog, DialogTitle, DialogContent } from '@mui/material';
+import { Box, Typography, Backdrop, CircularProgress, Table, TableHead, TableRow, TableBody, Button, Divider } from '@mui/material';
 import axios from 'axios';
 
 const GetPendingList = () => {
@@ -81,7 +81,7 @@ const GetPendingList = () => {
     const createActive = async (PLInfo) => {
         PLInfo.BL_id = PLInfo.plist_id;
         console.log('creating active: ', PLInfo);
-        navigate('/active-list', { state: PLInfo })
+        navigate(`/active-list/${PLInfo.plist_id}`, { state: PLInfo })
     }
 
     const downloadFile = async (s3FileUrl) => {
