@@ -23,7 +23,6 @@ const GetPendingList = () => {
     const getPendingLists = async () => {
         try {
             setOpenLoader(true);
-            // const response = await API.getPendingLists();
             const response = await API.getPendingLists();
             if (!response.data) {
                 navigate('/login');
@@ -34,7 +33,6 @@ const GetPendingList = () => {
         } catch (error) {
             setPendingList([])
             setOpenLoader(false);
-            console.log('some error happened')
         }
     }
 
@@ -54,7 +52,6 @@ const GetPendingList = () => {
 
         try {
             const response = await API.getS3URL(fileData);
-            console.log('response from aws:: ', response);
 
             if (response.data && response.data.signedUrl) {
                 await axios.put(response.data.signedUrl, file, {
@@ -63,8 +60,7 @@ const GetPendingList = () => {
                     },
                 });
 
-                const mysqlUpdateResponse = await API.updateMySQL({ uploadTime: response.data.uploadTime, fileName: fileData.fileName });
-                console.log('mysqlUpdateResponse: ', mysqlUpdateResponse);
+                await API.updateMySQL({ uploadTime: response.data.uploadTime, fileName: fileData.fileName });
                 setFile(null);
                 setFileData({ fileName: '', fileType: '' });
                 setOpenLoader(false);
@@ -72,7 +68,6 @@ const GetPendingList = () => {
             }
         } catch (error) {
             setOpenLoader(false);
-            console.error('Error getting signed URL:', error);
             alert('Error uploading the file');
             // Handle error or display an error message
         }
@@ -80,7 +75,6 @@ const GetPendingList = () => {
 
     const createActive = async (PLInfo) => {
         PLInfo.BL_id = PLInfo.plist_id;
-        console.log('creating active: ', PLInfo);
         navigate(`/active-list/${PLInfo.plist_id}`, { state: PLInfo })
     }
 

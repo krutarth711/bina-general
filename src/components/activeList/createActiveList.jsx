@@ -4,9 +4,6 @@ import { Close as CloseIcon } from '@mui/icons-material'; // Import the CloseIco
 import { API } from '../../helpers/api';
 
 const CreateActiveList = ({ isOpen, onClose, initData }) => {
-    // console.log('isOpen', isOpen);
-    // console.log('onClose', onClose);
-    // console.log('initData', initData);
     const [formInvalid, setFormInvalid] = useState(false);
 
     const [activeData, setActiveData] = useState({
@@ -31,7 +28,6 @@ const CreateActiveList = ({ isOpen, onClose, initData }) => {
     });
 
     useEffect(() => {
-        console.log('initData', initData);
         setActiveData((prevData) => ({ ...prevData, ...initData }));
     }, [initData]);
 
@@ -70,21 +66,16 @@ const CreateActiveList = ({ isOpen, onClose, initData }) => {
                 setFormInvalid(true);
                 return;
             } else {
-                console.log('activeData:: ', activeData);
-                console.log('activeData.alist_id:: ', activeData.alist_id);
                 if (!activeData.alist_id) {
                     //create active list
-                    console.log('should send the req:');
                     await API.createActiveList(activeData);
                 } else {
                     //update active list
-                    console.log('IT SHOULD CALL UPDATE');
                     await API.updateActiveList(activeData);
                 }
             }
         } catch (error) {
             alert('some error occurred');
-            console.log(error);
         }
         // Close the modal after submission
         setActiveData({

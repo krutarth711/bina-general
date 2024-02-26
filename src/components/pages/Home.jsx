@@ -15,9 +15,7 @@ const Home = () => {
 
 
   useEffect(() => {
-    console.log('account role is::', account.role);
     if (account.role === 'Admin' || account.role === 'Super Admin') {
-      console.log('pushing the users');
       setTileLinks([...tileLinks, { link: "/users", title: "Users", content: "Manage users" }]);
     }
   }, []);

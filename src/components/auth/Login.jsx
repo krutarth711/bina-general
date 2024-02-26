@@ -41,17 +41,12 @@ const Login = () => {
         setOpenLoader(true);
         const response = await API.userLogin(login);
         if (response.isSuccess) {
-            console.log('response::', response);
-            console.log('response.data::', response.data.token);
             sessionStorage.setItem('accessToken', 'Bearer ' + response.data.token);
-            // sessionStorage.setItem('refreshToken', 'Bearer ' + response.data.refreshToken);
             sessionStorage.setItem('username', response.data.username);
             sessionStorage.setItem('role', response.data.role);
-            console.log(JSON.stringify({ username: response.data.username, role: response.data.role }));
 
             setAccount({ username: response.data.username, role: response.data.role })
 
-            console.log('set the authentication to true::: ');
             setOpenLoader(false);
             navigate('/');
         } else {

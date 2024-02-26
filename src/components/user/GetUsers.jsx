@@ -41,11 +41,8 @@ const GetUsers = () => {
             fetchUsers()
             setOpenLoader(false);
         } catch (error) {
-            console.log('ERROR deleting user: ', error);
             alert('Error deleting user');
         }
-        // alert('This feature will soon be available');
-        // setUsers(users.filter(user => user.user_id !== removeId));
     };
     return (
         <>

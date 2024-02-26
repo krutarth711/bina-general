@@ -1,24 +1,19 @@
-import React, { useContext, useEffect, useState } from 'react';
-import { useLocation, useNavigate } from 'react-router-dom';
-import { List, ListItemButton, Typography, Box, Paper } from '@mui/material';
-// import { makeStyles } from '@mui/styles';
+import React, { useEffect, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
+import { List, ListItemButton, Typography, Box } from '@mui/material';
 import GetActiveSingleList from './getActiveSingleList';
-import { DataContext } from '../../contexts/authContext';
 
 
 import { API } from '../../helpers/api';
 
 const GetActiveList = () => {
     const navigate = useNavigate();
-    // const classes = useStyles();
+
     const [selectedList, setSelectedList] = useState(null);
 
-    // const { account } = useContext(DataContext);
     const [activeBLists, setActiveBLists] = useState([]);
 
     const handleListClick = async (list) => {
-        console.log('activeBLists:: ', list);
-        console.log('sending listid:: ', list.plist_id);
         navigate(`/active-list/${list.plist_id}`);
         setSelectedList(list);
     };
@@ -32,7 +27,6 @@ const GetActiveList = () => {
 
     const getActiveLists = async () => {
         const activeListsData = await API.getActivePendingLists({ status: true });
-        console.log('activeListsData:', activeListsData);
         setActiveBLists(activeListsData?.data?.plists || []);
     }
 

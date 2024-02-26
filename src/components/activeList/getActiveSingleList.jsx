@@ -127,17 +127,14 @@ const GetActiveSingleList = ({ list }) => {
         }
         setOpenLoader(false);
         navigate('/active-list');
-        console.log('submitList clicked :');
     };
 
     const editItem = (activeItem) => {
-        console.log('Will be edited:', activeItem);
         setCreateActiveListData((prevData) => ({ ...prevData, ...activeItem }));
         setCreateUserModalOpen(true);
     }
 
     const removeItem = async (alist_id) => {
-        console.log('it will remove an item');
         try {
             await API.deleteActiveList({ alist_id });
         } catch (error) {
