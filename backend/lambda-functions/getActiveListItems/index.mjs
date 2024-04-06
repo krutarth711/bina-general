@@ -11,7 +11,6 @@ const dbConfig = {
   database: process.env.DATABASE_NAME,
 };
 export const handler = async (event) => {
-  console.log("EVENNTT:: ", event);
   try {
     const tokenResponse = tokenVerify(event.params.header["Authorization"]);
     if (tokenResponse.statusCode !== 200) {
@@ -34,14 +33,10 @@ export const handler = async (event) => {
     let activeListQuery = `SELECT * FROM active_lists WHERE BL_id = ${BL_id} ORDER BY createdAt ASC`;
     let pendingListQuery = `SELECT listname, list_status FROM pending_lists WHERE plist_id = ${BL_id}`;
     // , pending_lists.listname, pending_lists.list_status
-    console.log("FINAL active list QUERY: ", activeListQuery);
-    console.log("FINAL pending list QUERY: ", pendingListQuery);
 
     // Query the active list table
     const [rows] = await connection.execute(activeListQuery);
     const [plist] = await connection.execute(pendingListQuery);
-
-    console.log("plist is: ", plist);
 
     // Close the database connection
     await connection.end();

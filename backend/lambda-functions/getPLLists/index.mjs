@@ -1,5 +1,4 @@
 import mysql from "mysql2/promise";
-import jwt from "jsonwebtoken";
 import { tokenVerify } from "./util.mjs";
 
 const dbConfig = {
@@ -10,14 +9,12 @@ const dbConfig = {
   database: process.env.DATABASE_NAME,
 };
 export const handler = async (event) => {
-  console.log("EVENNTT:: ", event);
   try {
     const tokenResponse = tokenVerify(event.params.header["Authorization"]);
     if (tokenResponse.statusCode !== 200) {
       return tokenResponse;
     }
     event.user = tokenResponse.user;
-    console.log("tokenResponse: ", tokenResponse);
 
     const connection = await mysql.createConnection(dbConfig);
     const { status } = event.params.querystring;
@@ -33,8 +30,6 @@ export const handler = async (event) => {
     }
 
     query = `${query} ORDER BY created_date ASC`;
-
-    console.log("entire query: ", query);
 
     // Query the users table
     const [rows] = await connection.execute(query);

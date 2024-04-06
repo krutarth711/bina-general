@@ -10,7 +10,6 @@ const dbConfig = {
   database: process.env.DATABASE_NAME,
 };
 export const handler = async (event) => {
-  console.log("EVENNTT:: ", event);
   try {
     const tokenResponse = tokenVerify(event.params.header["Authorization"]);
     if (tokenResponse.statusCode !== 200) {
@@ -24,7 +23,6 @@ export const handler = async (event) => {
     let query = `UPDATE pending_lists SET list_status='${status}' WHERE plist_id=${plist_id}`;
 
     // Query the users table
-    console.log("FINAL QUERY INSERT/UPDATE:", query);
     const [alists] = await connection.execute(query);
 
     // Close the database connection

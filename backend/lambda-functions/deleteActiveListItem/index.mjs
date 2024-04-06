@@ -11,7 +11,6 @@ const dbConfig = {
 };
 export const handler = async (event) => {
   try {
-    console.log("In the delete active item handler");
     const tokenResponse = tokenVerify(event.params.header["Authorization"]);
     if (tokenResponse.statusCode !== 200) {
       return tokenResponse;
@@ -26,8 +25,6 @@ export const handler = async (event) => {
     let values = [alist_id];
 
     // Query the users table
-    console.log("FINAL QUERY INSERT:", query);
-    console.log("FINAL VALUES INSERT:", values);
     const [alists] = await connection.execute(query, values);
 
     // Close the database connection

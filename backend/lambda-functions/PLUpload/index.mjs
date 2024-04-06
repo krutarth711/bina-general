@@ -36,7 +36,6 @@ export const handler = async (event) => {
       body: JSON.stringify({ message: "Pending list saved" }),
     };
   } catch (error) {
-    console.log("ERROORRR:: ", error);
     return {
       statusCode: 500,
       body: JSON.stringify({ message: "Error uploading file." }),

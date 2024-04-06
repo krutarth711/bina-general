@@ -1,4 +1,3 @@
-/* eslint-disable import/first */
 import {
   S3Client,
   GetObjectCommand,
@@ -6,8 +5,10 @@ import {
 } from "@aws-sdk/client-s3";
 
 import mysql from "mysql2/promise";
-import jwt from "jsonwebtoken";
 import { tokenVerify } from "./util.mjs";
+import PizZip from "pizzip";
+import Docxtemplater from "docxtemplater";
+import { Readable } from "stream";
 
 const dbConfig = {
   host: process.env.RDS_HOSTNAME,
@@ -16,10 +17,6 @@ const dbConfig = {
   port: process.env.RDS_PORT,
   database: process.env.DATABASE_NAME,
 };
-
-import PizZip from "pizzip";
-import Docxtemplater from "docxtemplater";
-import { Readable } from "stream";
 
 export const handler = async (event) => {
   const srcBucket = "bulandinvoicestest";
@@ -36,12 +33,6 @@ export const handler = async (event) => {
       return tokenResponse;
     }
     event.user = tokenResponse.user;
-    if (event.user.role !== "Super Admin") {
-      return {
-        statusCode: 401,
-        message: "You are not authorized to access this",
-      };
-    }
     const connection = await mysql.createConnection(dbConfig);
 
     const { BL_id } = event.body;
@@ -65,19 +56,19 @@ export const handler = async (event) => {
     for (let i = 0; i < rows.length; i++) {
       listItems.push({
         index: i + 1,
-        hs_code: rows[i].hs_code,
-        item_name: rows[i].item_name,
-        brand: rows[i].brand,
+        hs_code: rows[i].hs_code || null,
+        item_name: rows[i].item_name || "",
+        brand: rows[i].brand || "",
         pdate: "01/10/2023",
         edate: "01/09/2025",
         origin: "INDIA",
         UOM: rows[i].UOM,
-        final_quantity: rows[i].final_quantity,
-        unit_weight: rows[i].unit_weight,
-        unit: rows[i].unit,
-        unit_pieces: rows[i].unit_pieces,
-        unit_price: rows[i].unit_price,
-        total_price: rows[i].total_price,
+        final_quantity: rows[i].final_quantity || 0,
+        unit_weight: rows[i].unit_weight || 0,
+        unit: rows[i].unit || "",
+        unit_pieces: rows[i].unit_pieces || 0,
+        unit_price: rows[i].unit_price || 0,
+        total_price: rows[i].total_price || 0,
       });
       grand_total += rows[i].total_price;
       grand_package_total += rows[i].final_quantity;
@@ -108,7 +99,7 @@ export const handler = async (event) => {
 
     // Render the document with your data
     doc.render({
-      company_name: listName,
+      company_name: listName || "",
       po_box: "2048",
       company_telephone: "+97142200944",
       company_fax1: "+97142200944",
@@ -131,11 +122,18 @@ export const handler = async (event) => {
       .getZip()
       .generate({ type: "nodebuffer", compression: "DEFLATE" });
     // Upload the output file to S3
-    await s3Client.send(
+
+    const uploadResult = await s3Client.send(
       new PutObjectCommand({ Bucket: srcBucket, Key: outputKey, Body: buf })
     );
 
-    let plistQuery = `UPDATE pending_lists SET list_status='Submitted' WHERE plist_id=${BL_id}`;
+    if (!uploadResult.$metadata.httpStatusCode === 200) {
+      throw new Error("Failed to upload document to S3");
+    }
+
+    const documentUrl = `https://${srcBucket}.s3.amazonaws.com/${outputKey}`;
+
+    let plistQuery = `UPDATE pending_lists SET list_status='Submitted', submit_url='${documentUrl}' WHERE plist_id=${BL_id}`;
     const [plistRows] = await connection.execute(plistQuery);
 
     return {

@@ -11,7 +11,6 @@ const dbConfig = {
 };
 export const handler = async (event) => {
   try {
-    console.log("event is: ", event);
     const tokenResponse = tokenVerify(event.params.header["Authorization"]);
     if (tokenResponse.statusCode !== 200) {
       return tokenResponse;

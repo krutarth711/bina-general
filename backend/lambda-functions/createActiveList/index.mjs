@@ -1,5 +1,4 @@
 import mysql from "mysql2/promise";
-import jwt from "jsonwebtoken";
 import { tokenVerify } from "./util.mjs";
 
 const dbConfig = {
@@ -11,7 +10,6 @@ const dbConfig = {
 };
 export const handler = async (event) => {
   try {
-    console.log("In the create active item handler");
     const tokenResponse = tokenVerify(event.params.header["Authorization"]);
     if (tokenResponse.statusCode !== 200) {
       return tokenResponse;
@@ -76,15 +74,11 @@ export const handler = async (event) => {
     ];
 
     // Query the users table
-    console.log("FINAL QUERY INSERT:", query);
-    console.log("FINAL VALUES INSERT:", values);
     const [alists] = await connection.execute(query, values);
 
     if (list_status === "Not-Started") {
       query = `UPDATE pending_lists SET list_status='In-Progress' WHERE plist_id=${BL_id}`;
-      console.log("QUERY at not-started: ", query);
       const [pl_update] = await connection.execute(query, values);
-      console.log("pl updated:", pl_update);
     }
 
     // Close the database connection

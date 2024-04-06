@@ -1,5 +1,4 @@
 import mysql from "mysql2/promise";
-import jwt from "jsonwebtoken";
 import { tokenVerify } from "./util.mjs";
 
 const dbConfig = {
@@ -10,7 +9,6 @@ const dbConfig = {
   database: process.env.DATABASE_NAME,
 };
 export const handler = async (event) => {
-  console.log("EVENNTT:: ", event);
   try {
     const tokenResponse = tokenVerify(event.params.header["Authorization"]);
     if (tokenResponse.statusCode !== 200) {

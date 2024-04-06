@@ -1,8 +1,4 @@
-import {
-  S3Client,
-  GetObjectCommand,
-  PutObjectCommand,
-} from "@aws-sdk/client-s3";
+import { S3Client, PutObjectCommand } from "@aws-sdk/client-s3";
 import { getSignedUrl } from "@aws-sdk/s3-request-presigner";
 import { tokenVerify } from "./util.mjs";
 
@@ -13,7 +9,6 @@ const bucketName = "bllists";
 export const handler = async (event) => {
   try {
     const tokenResponse = tokenVerify(event.params.header["Authorization"]);
-    console.log("TOKEN RESPONSE IS: ", tokenResponse);
     if (tokenResponse.statusCode !== 200) {
       return tokenResponse;
     }
@@ -26,7 +21,6 @@ export const handler = async (event) => {
 
     // Generate a unique key for the S3 object (you may customize this logic)
     const objectKey = `${currentTime}_${event.body.fileName}`;
-    console.log("ObjectKey: ", objectKey);
 
     // Set the S3 object parameters
     const s3Params = {
