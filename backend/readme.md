@@ -54,3 +54,68 @@ This document should be added inside the folder called "input" which should be i
 
 For the created document to take place, there should exist a folder called "output" inside the same s3 bucket. i.e. bulandinvoicetest/output/
 All the generated documents will go to this path.
+
+## SQL queries
+
+### user
+
+```
+CREATE TABLE `users` (
+  `user_id` int NOT NULL AUTO_INCREMENT,
+  `username` varchar(45) NOT NULL,
+  `password` varchar(255) NOT NULL,
+  `email` varchar(255) NOT NULL,
+  `role` enum('Super Admin','Admin','Staff') NOT NULL DEFAULT 'Staff',
+  PRIMARY KEY (`user_id`),
+  UNIQUE KEY `user_id_UNIQUE` (`user_id`),
+  UNIQUE KEY `username_UNIQUE` (`username`),
+  UNIQUE KEY `email_UNIQUE` (`email`)
+) ENGINE=InnoDB AUTO_INCREMENT=10 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+
+```
+
+### Pending lists
+
+```
+CREATE TABLE `pending_lists` (
+  `plist_id` int NOT NULL AUTO_INCREMENT,
+  `listname` varchar(255) NOT NULL,
+  `s3_url` varchar(255) DEFAULT NULL,
+  `created_date` datetime NOT NULL,
+  `list_status` enum('In-Progress','In-Review','Submitted','Not-Started') DEFAULT 'Not-Started',
+  `submit_url` varchar(255) DEFAULT '',
+  PRIMARY KEY (`plist_id`),
+  UNIQUE KEY `plist_id_UNIQUE` (`plist_id`),
+  UNIQUE KEY `s3_url_UNIQUE` (`s3_url`)
+) ENGINE=InnoDB AUTO_INCREMENT=9 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+
+```
+
+### Active lists
+
+```
+CREATE TABLE `active_lists` (
+  `alist_id` int NOT NULL AUTO_INCREMENT,
+  `actual_quantity` int DEFAULT NULL,
+  `total_weight` float DEFAULT NULL,
+  `unit` enum('KGS','GRMS','MLS') DEFAULT 'KGS',
+  `BL_id` int DEFAULT NULL,
+  `total_price` float NOT NULL,
+  `item_name` varchar(45) NOT NULL,
+  `unit_price` float DEFAULT NULL,
+  `unit_weight` float DEFAULT NULL,
+  `createdAt` timestamp NULL DEFAULT CURRENT_TIMESTAMP,
+  `updatedAt` timestamp NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  `hs_code` varchar(45) DEFAULT NULL,
+  `radiation` varchar(45) DEFAULT NULL,
+  `chemical` varchar(45) DEFAULT 'NILL',
+  `brand` varchar(45) DEFAULT NULL,
+  `UOM` varchar(45) DEFAULT 'PKTS',
+  `unit_pieces` int DEFAULT '0',
+  `total_pieces` int DEFAULT '0',
+  `final_quantity` int DEFAULT '0',
+  PRIMARY KEY (`alist_id`),
+  KEY `fk_pending_lists` (`BL_id`),
+  CONSTRAINT `fk_pending_lists` FOREIGN KEY (`BL_id`) REFERENCES `pending_lists` (`plist_id`)
+) ENGINE=InnoDB AUTO_INCREMENT=32 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+```
